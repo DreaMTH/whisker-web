@@ -3,8 +3,7 @@ import {Fira_Code} from "next/font/google";
 import "./globals.css";
 import React from "react";
 import {NextFont} from "next/dist/compiled/@next/font";
-import Header from "@/components/Header/Header";
-import Footer from "@/components/Footer/Footer";
+import {Header, Footer} from "@/components";
 import {NavbarItems} from "@/components/Header/NavbarItems";
 const font: NextFont = Fira_Code({subsets: ["latin"], weight: '600'});
 

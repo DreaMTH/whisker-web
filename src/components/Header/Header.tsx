@@ -1,13 +1,18 @@
+"use client"
 import styles from "./Header.module.css";
 import React from "react";
 import {NavbarItem} from "@/components/Header/NavbarItems";
 import Link from "next/link";
+import {usePathname} from "next/navigation";
 
-export default function Header({links}: Readonly<{ links: NavbarItem[] }>): React.ReactNode {
+export const Header = ({links}: Readonly<{ links: NavbarItem[] }>): React.ReactNode => {
+    const path = usePathname();
+    console.log(path);
     return (
         <>
             <nav className={styles.rootNav}>
-                {links.map(link => <Link key={link.title} href={link.path}>{link.title}</Link>)}
+                {links.map(link => <Link className={`${styles.link} ${path === link.path && styles.active}`}
+                                         key={link.title} href={link.path}>{link.title}</Link>)}
                 {/*
                 <div>
                     <li>Home</li>

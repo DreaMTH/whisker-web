@@ -1,11 +1,33 @@
 .rootNav{
     display: flex;
     justify-content: space-around;
-    color: #fff;
+    align-content: center;
+    background-color: #13084d;
     flex-wrap: wrap;
-    flex-basis: 100px
+    flex-basis: 100px;
+    height: 10vh;
+    width: 100vw;
+    border: 1px solid black;
+    position: fixed;
 }
-.rootNav div{
-    display: flex;
-    gap: 1rem;
+.link{
+    text-decoration: none;
+    background-color: #13084d;
+    color: #fff;
+    text-shadow: 0 0 0.3rem #242424;
+    box-shadow: 0 0 0.3rem #fff;
+    border-radius: 10px;
+    border: 1px solid #13084d;
+    padding: 0 1rem;
+}
+.active{
+    background-color: #fff;
+    color: #13084d;
+    text-shadow: 0 0 1px #242424;
+}
+.link:hover{
+    background-color: #fff;
+    color: #13084d;
+    text-shadow: 0 0 1px #242424;
+    opacity: 70%;
 }
