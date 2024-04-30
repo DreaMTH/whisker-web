@@ -1,5 +1,14 @@
 body{
     margin: 0;
     background-color: #242424;
-
+}
+li{
+    list-style: none;
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    padding: 0 1rem;
+    background-color: #13084d;
 }

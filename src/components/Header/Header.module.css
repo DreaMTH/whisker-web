@@ -1,0 +1,11 @@
+.rootNav{
+    display: flex;
+    justify-content: space-around;
+    color: #fff;
+    flex-wrap: wrap;
+    flex-basis: 100px
+}
+.rootNav div{
+    display: flex;
+    gap: 1rem;
+}
