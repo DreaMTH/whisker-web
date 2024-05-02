@@ -1,7 +1,11 @@
-import {UserModel} from "@/lib/models/userModel";
-import * as var_userland from "VAR_USERLAND";
+"use server";
 
-interface IUser {
+import {UserModel} from "@/lib/models/userModel";
+import bcrypt from "bcrypt";
+import {isValidObjectId} from "mongoose";
+import {connectDb} from "@/utils/connect";
+
+export declare interface IUser {
     name: string,
     displayName: string,
     email: string,
@@ -11,17 +15,35 @@ interface IUser {
 
 }
 
-export const createUser = (user: Readonly<IUser>) => {
+export const createUser = async (user: IUser) => {
     try {
-        const doc = new UserModel(user);
-        doc.save().then(res => {
-            console.log(res);
-            return res;
-        }).catch(err => console.log(err));
+        await connectDb();
+        const salt = await bcrypt.genSalt(16);
+        const hashPassword = await bcrypt.hash(user.password, salt);
+        user.password = hashPassword;
+        const doc = await new UserModel(user);
+        console.log("passed");
+        await doc.save();
     } catch (err) {
         console.log(err);
     }
 }
-export const updateDisplayName = (id:Readonly<string>, newName:Readonly<string>) => {
-
+export const updateDisplayName = async (id: Readonly<string>, newName: Readonly<string>) => {
+    try {
+        if (!isValidObjectId(id)) {
+            throw new Error("Invalid user id");
+        }
+        const doc = await UserModel.findByIdAndUpdate(id, {
+            displayName: newName,
+        }, {
+            new: true,
+        });
+        if (!doc) {
+            throw new Error("Something went wrong during updating");
+        }
+        return doc;
+    } catch (err: any) {
+        console.error(err);
+        throw new Error(err.toString());
+    }
 }
