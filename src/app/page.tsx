@@ -1,17 +1,23 @@
+"use client";
+import {ReactNode, useEffect, useState} from "react";
+import {useAppSelector} from "@/lib/redux/store";
 
-import {ReactNode} from "react";
+export default function Home(): ReactNode {
+    const [user, setUser] = useState<string>('');
+    const displayName = useAppSelector(state => state.authReducer.user?.displayName);
+    useEffect(() => {
+        setUser(displayName || '');
+    }, [displayName])
+    return (
+        <>
+            <h1>
+                {user}
+            </h1>
+            <ul>
+                <li><p>...</p></li>
+            </ul>
 
-export default function Home(): ReactNode  {
-  return (
-      <>
-        <h1>
-          The latest news!
-        </h1>
-        <ul>
-          <li><p>...</p></li>
-        </ul>
-
-        <></>
-      </>
-  );
+            <></>
+        </>
+    );
 }

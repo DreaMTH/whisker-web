@@ -5,6 +5,10 @@ import React from "react";
 import {NextFont} from "next/dist/compiled/@next/font";
 import {Header, Footer} from "@/components";
 import {NavbarItems} from "@/components/Header/NavbarItems";
+import {store} from "@/lib/redux/store";
+import {Provider} from "react-redux";
+import {ReduxProvider} from "@/lib/redux/Provider";
+
 const font: NextFont = Fira_Code({subsets: ["latin"], weight: '600'});
 
 export const metadata: Metadata = {
@@ -16,11 +20,13 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
     return (
         <html lang="en">
         <body className={font.className}>
-        <Header links={NavbarItems}/>
-        <div className="container">
-            {children}
-        </div>
-        <Footer/>
+        <ReduxProvider>
+            <Header links={NavbarItems}/>
+            <div className="container">
+                {children}
+            </div>
+            <Footer/>
+        </ReduxProvider>
         </body>
         </html>
     );

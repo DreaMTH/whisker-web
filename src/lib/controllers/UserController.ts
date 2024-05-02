@@ -6,6 +6,7 @@ import {isValidObjectId} from "mongoose";
 import {connectDb} from "@/utils/connect";
 
 export declare interface IUser {
+    id?: string,
     name: string,
     displayName: string,
     email: string,
@@ -15,6 +16,28 @@ export declare interface IUser {
 
 }
 
+export const userLogin = async ({email, password}: Readonly<{ email: string, password: string }>) => {
+    try {
+        await connectDb();
+        const user = await UserModel.findOne({email: email});
+        if (!user) {
+            return null;
+        }
+        const validation = bcrypt.compare(user._doc.password, password);
+        if (!validation) {
+            return null;
+        }
+        return {
+            id: user._doc._id.toString(),
+            name: user._doc.name,
+            displayName: user._doc.displayName,
+            email: user._doc.email,
+            password: user._doc.password,
+        }
+    } catch (err: any) {
+        throw new Error(err);
+    }
+}
 export const createUser = async (user: IUser) => {
     try {
         await connectDb();
