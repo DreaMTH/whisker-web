@@ -2,9 +2,10 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {IUser, userLogin} from "@/lib/controllers/UserController";
 
 
-type authState = {
+export declare type authState = {
     status: string,
     user: IUser | null,
+    token: string | null,
 }
 
 interface payloadType {
@@ -15,16 +16,16 @@ interface payloadType {
 const initialState: authState = {
     status: 'loading',
     user: null,
+    token: null,
 }
 export const authUser = createAsyncThunk('', async (loginInfo: payloadType) => {
-    console.log('I am in auth user');
-    const user = await userLogin(loginInfo);
-    if (!user) {
+    const data = await userLogin(loginInfo);
+    if (!data?.user || !data?.token) {
         alert('Email or password invalid');
-        return null;
+        return {user: null, token: null};
     }
     console.log("I am about to return user");
-    return user;
+    return data;
 });
 export const authSlice = createSlice({
     name: 'auth',
@@ -42,7 +43,8 @@ export const authSlice = createSlice({
             })
             .addCase(authUser.fulfilled, (state, action) => {
                 state.status = 'loaded';
-                state.user = action.payload;
+                state.user = action.payload.user;
+                state.token = action.payload.token;
             })
             .addCase(authUser.rejected, (state, action) => {
                 state.status = 'error';
@@ -51,4 +53,5 @@ export const authSlice = createSlice({
     }
 });
 export const {logOut} = authSlice.actions;
+export const isAuth = (state: authState) => Boolean(state.user);
 export default authSlice.reducer;

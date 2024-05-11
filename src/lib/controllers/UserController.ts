@@ -4,6 +4,7 @@ import {UserModel} from "@/lib/models/userModel";
 import bcrypt from "bcrypt";
 import {isValidObjectId} from "mongoose";
 import {connectDb} from "@/utils/connect";
+import jwt from "jsonwebtoken";
 
 export declare interface IUser {
     id?: string,
@@ -13,7 +14,6 @@ export declare interface IUser {
     description?: string,
     password: string,
     avatarUrl?: string,
-
 }
 
 export const userLogin = async ({email, password}: Readonly<{ email: string, password: string }>) => {
@@ -27,12 +27,16 @@ export const userLogin = async ({email, password}: Readonly<{ email: string, pas
         if (!validation) {
             return null;
         }
+        const token = jwt.sign({id: user._doc._id}, "token", {expiresIn: "30d"});
         return {
-            id: user._doc._id.toString(),
-            name: user._doc.name,
-            displayName: user._doc.displayName,
-            email: user._doc.email,
-            password: user._doc.password,
+            user: {
+                id: user._doc._id.toString(),
+                name: user._doc.name,
+                displayName: user._doc.displayName,
+                email: user._doc.email,
+                password: user._doc.password,
+            },
+            token,
         }
     } catch (err: any) {
         throw new Error(err);
@@ -42,8 +46,7 @@ export const createUser = async (user: IUser) => {
     try {
         await connectDb();
         const salt = await bcrypt.genSalt(16);
-        const hashPassword = await bcrypt.hash(user.password, salt);
-        user.password = hashPassword;
+        user.password = await bcrypt.hash(user.password, salt);
         const doc = await new UserModel(user);
         console.log("passed");
         await doc.save();

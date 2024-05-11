@@ -3,6 +3,7 @@ import React from "react";
 import {authUser} from "@/lib/redux/auth";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "@/lib/redux/store";
+import styles from "./registrationForm.module.css";
 
 export const LoginForm = (): React.ReactNode => {
     const dispatch = useDispatch<AppDispatch>();
@@ -13,11 +14,17 @@ export const LoginForm = (): React.ReactNode => {
             email,
             password
         };
-        dispatch(authUser(loginInfo));
+        const data: any = await dispatch(authUser(loginInfo));
+        if (data.payload.token) {
+            window.localStorage.setItem("token", data.payload.token);
+
+        } else {
+            alert("Authorization failed");
+        }
     }
     return (
         <>
-            <form action={login}>
+            <form className={styles.container} action={login}>
                 <input
                     name="email"
                     required
