@@ -28,7 +28,10 @@ export const CreateNews = async (News: INews) => {
 export const GetAllNews = async () => {
     try {
         await connectDb();
-        const news = NewsModel.find();
+        const news = NewsModel
+            .find()
+            .populate("relatedUser")
+            .exec();
         if (!news) {
             return null;
         }
@@ -45,7 +48,10 @@ export const GetNewsById = async (id: Readonly<string>) => {
             console.error("Invalid post id");
             return null;
         }
-        const news = NewsModel.findByIdAndUpdate(id, {views: +1});
+        const news = NewsModel
+            .findByIdAndUpdate(id, {views: +1})
+            .populate("relatedUser")
+            .exec();
         if (!news) {
             return null;
         }
